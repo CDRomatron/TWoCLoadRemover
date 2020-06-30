@@ -6,6 +6,8 @@ Download the latest release from https://github.com/CDRomatron/TWoCLoadRemover/r
 
 In your Livesplit folder, create a folder named TWoC and paste the .exe and the two .asl files in there.
 
+IMPORTANT FOR SPEEDRUN SUBMISSIONS: You will need to manually re-add the time spent in the credits during 106% as the timer will stay paused during this.
+
 ### Configuring
 
 It is highly recommended to use the [TWoC Wizard](https://github.com/CDRomatron/TWoCWizard) to initially configure the load remover, not this application, due to the complexity of it.
