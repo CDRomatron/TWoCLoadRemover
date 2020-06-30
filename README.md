@@ -3,7 +3,8 @@ A video based load remover for Crash Bandicoot: The Wrath of Cortex
 
 ## How to use
 Download the latest release from https://github.com/CDRomatron/TWoCLoadRemover/releases
-Either follow the guide in the provided README.txt, or continue reading below.
+
+In your Livesplit folder, create a folder named TWoC and paste the .exe and the two .asl files in there.
 
 ### Configuring
 
