@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -17,6 +19,7 @@ namespace TWoCLoadRemover
         public MainWindow()
         {
             InitializeComponent();
+
             bmpTopLeft = new Bitmap(100, 100);
             bmpTopMid = new Bitmap(100, 100);
             bmpMiddle = new Bitmap(100, 100);
@@ -248,56 +251,75 @@ namespace TWoCLoadRemover
                     try
                     {
                         val1 = (compare(bm4, bm2) + 1) / 10000000;
-                        val2 = (compare(bm1, bm3) + 1) / 10000000;
-                        val3 = (compare(bm4, bm5) + 1) / 10000000;
-                        val4 = (compare(bm6, bm7) + 1) / 10000000;
 
+                        response1 = val1.ToString();
 
                         if (val1 < bst)
                         {
                             flag1 = true;
                         }
+                    }
+                    catch(Exception )
+                    {
+                        response1 = "Image Size Error";
+                    }
+
+                    try
+                    {
+                        val2 = (compare(bm1, bm3) + 1) / 10000000;
+
+                        response2 = val2.ToString();
 
                         if (val2 < tlst)
                         {
                             flag2 = true;
                         }
+                    }
+                    catch(Exception )
+                    {
+                        response2 = "Image Size Error";
+                    }
 
-                        if(val3 < mlst)
+                    try
+                    {
+                        val3 = (compare(bm4, bm5) + 1) / 10000000;
+
+                        response3 = val3.ToString();
+
+                        if (val3 < mlst)
                         {
                             flag3 = true;
                         }
+                    }
+                    catch(Exception )
+                    {
+                        response3 = "Image Size Error";
+                    }
+                        
+                    try
+                    {
+                        val4 = (compare(bm6, bm7) + 1) / 10000000;
+
+                        response4 = val4.ToString();
 
                         if (val4 < wt)
                         {
                             flag4 = true;
                         }
-
-                        response1 = val1.ToString();
-                        response2 = val2.ToString();
-                        response3 = val3.ToString();
-                        response4 = val4.ToString();
                     }
                     catch
                     {
                         //if compare functions fail
-                        response1 = "Image Size Error";
-                        response2 = "Image Size Error";
-                        response3 = "Image Size Error";
                         response4 = "Image Size Error";
                     }
 
 
                     Dispatcher.Invoke(new Action(() =>
                     {
-                        if (flag1 || flag2 || flag3 || flag4)
-                        {
-                            checkBox.IsChecked = true;
-                        }
-                        else if (!flag1 && !flag2 && !flag3 && !flag4)
-                        {
-                            checkBox.IsChecked = false;
-                        }
+                        checkBox.IsChecked = flag1;
+                        checkBox1.IsChecked = flag2;
+                        checkBox2.IsChecked = flag3;
+                        checkBox3.IsChecked = flag4;
 
                         if (cbxPreview.IsChecked == true)
                         {
@@ -497,187 +519,6 @@ namespace TWoCLoadRemover
             {
                 MessageBox.Show("Save failed, is the image or livesplit open?\n" + ex.Message);
             }
-        }
-
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            /*try
-            {
-                //set default values
-                int x = 0;
-                int y = 0;
-                int w = 100;
-                int h = 100;
-                int h1 = 1;
-                int h2 = 1;
-
-                //attempt to read values from UI
-                Dispatcher.Invoke(new Action(() =>
-                {
-                    try
-                    {
-                        x = Convert.ToInt32(textBox.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        x = 0;
-                    }
-
-                    try
-                    {
-                        y = Convert.ToInt32(textBox1.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        y = 0;
-                    }
-                    try
-                    {
-                        w = Convert.ToInt32(textBox2.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        w = 100;
-                    }
-                    try
-                    {
-                        h = Convert.ToInt32(textBox3.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        h = 100;
-                    }
-                    try
-                    {
-                        h1 = Convert.ToInt32(textBox4.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        h1 = 1;
-                    }
-                    try
-                    {
-                        h2 = Convert.ToInt32(textBox5.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        h2 = 1;
-                    }
-                }
-                ));
-                Bitmap bitmap = new Bitmap(w, h);
-                using (Graphics g = Graphics.FromImage(bitmap))
-                {
-                    g.CopyFromScreen(x, y, 0, 0, bitmap.Size);
-                }
-
-                bmpTop = CropBitMap((Bitmap)bitmap.Clone(), 0, 0, bitmap.Width, h1);
-                bmpMiddle = CropBitMap((Bitmap)bitmap.Clone(), 0, bitmap.Height - h2, bitmap.Width, h2);
-
-                try
-                {
-                    Bitmap bm1 = new Bitmap(bmpTop, new System.Drawing.Size(bmpTop.Width / 2, bmpTop.Height / 2));
-                    Bitmap bm2 = new Bitmap(savedbmp, new System.Drawing.Size(savedbmp.Width / 2, savedbmp.Height / 2));
-                    Bitmap bm3 = new Bitmap(savedbmp2, new System.Drawing.Size(savedbmp2.Width / 2, savedbmp2.Height / 2));
-
-                    Bitmap bm4 = new Bitmap(bmpMiddle, new System.Drawing.Size(bmpMiddle.Width / 2, bmpMiddle.Height / 2));
-                    Bitmap bm5 = new Bitmap(savedbmp3, new System.Drawing.Size(savedbmp3.Width / 2, savedbmp3.Height / 2));
-
-                    bool flag1 = false;
-                    bool flag2 = false;
-                    bool flag3 = false;
-
-                    float val1;
-                    float val2;
-                    float val3;
-
-                    string response1 = "";
-                    string response2 = "";
-                    string response3 = "";
-
-                    try
-                    {
-                        val1 = (compare(bm1, bm2) + 1) / 10000000;
-                        val2 = (compare(bm1, bm3) + 1) / 10000000;
-                        val3 = (compare(bm4, bm5) + 1) / 10000000;
-
-
-                        if (val1 < bst)
-                        {
-                            flag1 = true;
-                        }
-
-                        if (val2 < tlst)
-                        {
-                            flag2 = true;
-                        }
-
-                        if (val3 > mlst)
-                        {
-                            flag3 = true;
-                        }
-
-                        response1 = val1.ToString();
-                        response2 = val2.ToString();
-                        response3 = val3.ToString();
-                    }
-                    catch
-                    {
-                        //if compare functions fail
-                        response1 = "Image Size Error";
-                        response2 = "Image Size Error";
-                        response3 = "Image Size Error";
-                    }
-
-
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        if (flag1 || flag2 || flag3)
-                        {
-                            checkBox.IsChecked = true;
-                        }
-                        else if (!flag1 && !flag2 && !flag3)
-                        {
-                            checkBox.IsChecked = false;
-                        }
-
-                        if (cbxPreview.IsChecked == true)
-                        {
-                            //resize image to fit preview
-                            Bitmap tmp = new Bitmap(bitmap, new System.Drawing.Size(150, 150));
-                            imgPreview.Source = BitmapToImageSource(tmp);
-                            tbxBSV.Text = response1;
-                            tbxTLSV.Text = response2;
-                            tbxMLSV.Text = response2;
-                        }
-                        else if(cbxPreviewH1.IsChecked == true)
-                        {
-                            //resize image to fit preview
-                            Bitmap tmp = new Bitmap(bmpTop, new System.Drawing.Size(150, 150));
-                            imgPreview.Source = BitmapToImageSource(tmp);
-                            tbxBSV.Text = response1;
-                            tbxTLSV.Text = response2;
-                            tbxMLSV.Text = response2;
-                        }
-                        else if(cbxPreviewH2.IsChecked == true)
-                        {
-                            //resize image to fit preview
-                            Bitmap tmp = new Bitmap(bmpMiddle, new System.Drawing.Size(150, 150));
-                            imgPreview.Source = BitmapToImageSource(tmp);
-                            tbxBSV.Text = response1;
-                            tbxTLSV.Text = response2;
-                            tbxMLSV.Text = response2;
-                        }
-                    }));
-                }
-                catch (Exception ex)
-                {
-
-                }
-            }
-            catch (Exception exp)
-            {
-            }*/
         }
 
         BitmapImage BitmapToImageSource(Bitmap bitmap)
